@@ -81,9 +81,7 @@ jobs:
           # Change all uppercase to lowercase
           OWNER=$( echo ${{ github.repository_owner }} | tr '[A-Z]' '[a-z]' )
           echo "OWNER=$OWNER" >> $GITHUB_ENV
-          
-
-          
+                   
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
@@ -96,3 +94,7 @@ jobs:
             ghcr.io/${{ env.OWNER }}/${{ env.REGISTRY_NAME }}
             ${{ env.DOCKERHUB_USERNAME }}/${{ env.REGISTRY_NAME }}
             ghcr.io/${{ env.OWNER }}/${{ env.REGISTRY_NAME }}:${{ env.SHA }}
+    
+      - name: Trigger Render.com's deployment hook
+        run: |
+          curl -X GET ${{ secrets.RENDER_DEPLOY_HOOK }}
